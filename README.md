@@ -1,4 +1,4 @@
-## End to End ML Project
+## End to End ML Project :: Deploy Docker image in ECR on EC2 instance
 
 Docker Build checked
 Github Workflow
