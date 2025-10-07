@@ -30,7 +30,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: testdockerpegasus.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_2646ba56f8a340ddb91e42ca93a8f687 }}/studentpredictor:${{ github.sha }}
+        tags: testdockerpegasus.azurecr.io/studentpredictor:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -48,4 +48,4 @@ jobs:
         app-name: 'testdockerpegasus'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_86972d170d444065925d2ee0d438a11e }}
-        images: 'testdockerpegasus.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_2646ba56f8a340ddb91e42ca93a8f687 }}/studentpredictor:${{ github.sha }}'
+        images: testdockerpegasus.azurecr.io/studentpredictor:${{ github.sha }}
