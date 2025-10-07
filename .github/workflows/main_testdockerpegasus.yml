@@ -18,7 +18,14 @@ jobs:
   
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-  
+
+      # ✅ NEW STEP — force lowercase repo owner to prevent casing issues
+      - name: Set lowercase environment variables
+        run: |
+          echo "OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
+          echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${GITHUB_SHA,,}" >> $GITHUB_ENV
+
       - name: Log in to Azure Container Registry
         uses: docker/login-action@v3
         with:
@@ -26,11 +33,18 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
   
+      # ✅ Build & push image with all lowercase image tag
       - name: Build and push container image
         run: |
-          IMAGE_TAG=$(echo "testdockerpegasus.azurecr.io/studentpredictor:${{ github.sha }}" | tr '[:upper:]' '[:lower:]')
-          echo "Building $IMAGE_TAG"
-          docker buildx build --push --tag $IMAGE_TAG -f ./Dockerfile .
+          IMAGE="testdockerpegasus.azurecr.io/${OWNER_LC}/studentpredictor:${IMAGE_TAG}"
+          IMAGE_LOWER=$(echo $IMAGE | tr '[:upper:]' '[:lower:]')
+          echo "Building $IMAGE_LOWER"
+          docker buildx build --push --tag $IMAGE_LOWER -f ./Dockerfile .
+
+      # ✅ Save image name for deployment job
+      - name: Save image name for deploy
+        run: echo "IMAGE_LOWER=testdockerpegasus.azurecr.io/${OWNER_LC}/studentpredictor:${IMAGE_TAG}" >> $GITHUB_OUTPUT
+        id: export-image
 
   deploy:
     runs-on: ubuntu-latest
@@ -40,11 +54,12 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'testdockerpegasus'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_86972d170d444065925d2ee0d438a11e }}
-        images: testdockerpegasus.azurecr.io/studentpredictor:${{ github.sha }}
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'testdockerpegasus'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_86972d170d444065925d2ee0d438a11e }}
+          images: testdockerpegasus.azurecr.io/${{ env.OWNER_LC }}/studentpredictor:${{ env.IMAGE_TAG }}
+
