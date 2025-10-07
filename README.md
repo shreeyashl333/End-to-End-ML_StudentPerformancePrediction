@@ -1,8 +1,10 @@
 ## End to End ML Project :: Deploy Docker image in ECR on EC2 instance
 
 Docker Build checked
-Github Workflow
-Iam User In AWS
+
+Github Workflow file (main.yaml)
+
+Create IAM User In AWS
 
 
 ## Docker Setup In EC2 commands to be Executed
