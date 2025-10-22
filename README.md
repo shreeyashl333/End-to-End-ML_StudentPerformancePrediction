@@ -1,40 +1,56 @@
-## End to End ML Project :: Deploy Docker image in ECR on EC2 instance
+#  End-to-End ML Project: Student Performance Prediction
 
-Docker Build checked
+###  Objective  
+Predict student scores using various **regression techniques** and identify the most accurate model for performance prediction.
 
-Github Workflow file (main.yaml)
+---
 
-Create IAM User In AWS
+##  Dataset  
+**File:** `stud.csv`  
+Contains student-related data used to build and evaluate regression models.
 
+---
 
-## Docker Setup In EC2 commands to be Executed
+## 🧩 Project Workflow  
 
-#optional
+### **1. Environment Setup**  
+- Created a local environment  
+- Defined dependencies in `setup.py` and `requirements.txt`  
 
-sudo apt-get update -y
+### **2. Repository Setup**  
+- Initialized and structured the project in **GitHub**
 
-sudo apt-get upgrade
+### **3. Core Utilities**  
+- Implemented **Logging**, **Custom Exceptions**, and a **Utils** module (helper functions)
 
-#required
+### **4. EDA and Model Training**  
+- Performed **Exploratory Data Analysis (EDA)**  
+- Trained multiple regression models within Jupyter notebooks  
 
-curl -fsSL https://get.docker.com -o get-docker.sh
+### **5. Modular Code Implementation (Pipelines)**  
+- **Data Ingestion** – Loading and splitting raw data  
+- **Data Transformation** – Handling missing values, encoding, scaling  
+- **Model Trainer** – Model selection, training, and **hyperparameter tuning**  
+- **Prediction Pipeline** – Generating predictions on unseen data  
 
-sudo sh get-docker.sh
+### **6. Flask Web Application**  
+- Built a simple **Flask app** for real-time prediction
 
-sudo usermod -aG docker ubuntu
+### **7. Containerization (Docker)**  
+- Created a **Dockerfile** for deployment on:
+  - **AWS ECR**
+  - **Azure ACR**
 
-newgrp docker
+### **8. Deployment**  
+- **Localhost** testing  
+- **AWS Elastic Beanstalk** (via GitHub → CodePipeline → Elastic Beanstalk)  
+- **AWS EC2** with ECR integration  
+- **Azure** deployment using ACR → Web App with Container  
 
-## Configure EC2 as self-hosted runner:
+---
 
-## Setup github secrets:
-
-AWS_ACCESS_KEY_ID=
-
-AWS_SECRET_ACCESS_KEY=
-
-AWS_REGION = us-east-1
-
-AWS_ECR_LOGIN_URI = demo>> 566373416292.dkr.ecr.ap-south-1.amazonaws.com
-
-ECR_REPOSITORY_NAME = simple-app
+##  Tech Stack  
+- **Languages:** Python  
+- **Frameworks/Libraries:** Scikit-learn, Flask  
+- **Tools:** Docker, AWS, Azure  
+- **Version Control:** Git & GitHub  
